@@ -700,27 +700,37 @@ def api_kisskh_stream(episode_id):
             logger.error('Daemon get_stream failed for ep %d: %s', episode_id, e)
 
     if not url:
-        # Fallback: try direct HTTP request using saved KISSKH_STREAM_KEY
+        # Fallback: try direct HTTP via KissKHApi (uses env var KISSKH_STREAM_KEY)
         if Config.KISSKH_STREAM_KEY:
-            logger.info('Daemon failed, trying fallback with KISSKH_STREAM_KEY for ep %d', episode_id)
+            logger.info('Daemon failed, trying KissKHApi fallback for ep %d', episode_id)
             try:
-                stream_api_url = (
-                    f'{KISSKH_BASE}/api/DramaList/Episode/{episode_id}.png'
-                    f'?err=false&ts=null&time=null&kkey={Config.KISSKH_STREAM_KEY}'
-                )
-                fallback_headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': '*/*',
-                    'Referer': f'{KISSKH_BASE}/',
-                    'Origin': 'https://kisskh.nl',
-                }
-                check = requests.get(stream_api_url, headers=fallback_headers, timeout=30, verify=False)
-                if check.ok and len(check.text) > 100:
-                    url = stream_api_url
-                    _stream_url_cache[episode_id] = url
-                    logger.info('Fallback using kkey stream URL: %s', url[:80])
+                from kisskh_downloader.kisskh_api import KissKHApi
+                api = KissKHApi(base_url=KISSKH_BASE)
+                slug = re.sub(r'[^a-zA-Z0-9\s-]', '', title).strip()
+                slug = re.sub(r'\s+', '-', slug)
+                keys = api.generate_kkeys(drama_id, episode_id, ep_num, title)
+                stream_key = keys.get('stream') or Config.KISSKH_STREAM_KEY
+                if stream_key:
+                    stream_url = api.get_stream_url(episode_id, stream_key)
+                    if stream_url:
+                        url = stream_url
+                        _stream_url_cache[episode_id] = url
+                        logger.info('KissKHApi fallback got stream URL: %s', url[:80])
+                sub_key = keys.get('sub') or Config.KISSKH_SUB_KEY
+                if sub_key and episode_id not in _sub_cache:
+                    try:
+                        sub_data = api.get_subtitles(episode_id, sub_key)
+                        if sub_data:
+                            _sub_cache[episode_id] = [s.model_dump() if hasattr(s, 'model_dump') else s for s in sub_data]
+                    except Exception:
+                        pass
             except Exception as e:
-                logger.error('Fallback stream fetch failed for ep %d: %s', episode_id, e)
+                logger.error('KissKHApi fallback failed for ep %d: %s', episode_id, e)
+            finally:
+                try:
+                    api.cleanup()
+                except Exception:
+                    pass
 
     if not url:
         return jsonify({'error': 'No stream URL returned from server'}), 404
