@@ -704,11 +704,20 @@ def api_kisskh_stream(episode_id):
         if Config.KISSKH_STREAM_KEY:
             logger.info('Daemon failed, trying fallback with KISSKH_STREAM_KEY for ep %d', episode_id)
             try:
+                slug = re.sub(r'[^a-zA-Z0-9\s-]', '', title).strip()
+                slug = re.sub(r'\s+', '-', slug)
+                ep_ref = f'{KISSKH_BASE}/Drama/{slug}/Episode-{ep_num}?id={drama_id}&ep={episode_id}'
+                fallback_headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Referer': ep_ref,
+                    'Origin': 'https://kisskh.nl',
+                }
                 stream_api_url = (
                     f'{KISSKH_BASE}/api/DramaList/Episode/{episode_id}.png'
                     f'?err=false&ts=null&time=null&kkey={Config.KISSKH_STREAM_KEY}'
                 )
-                resp = requests.get(stream_api_url, headers=_kisskh_headers(), timeout=30, verify=False)
+                resp = requests.get(stream_api_url, headers=fallback_headers, timeout=30, verify=False)
                 if resp.ok:
                     data = resp.json()
                     fallback_url = data.get('Video')
@@ -775,7 +784,13 @@ def api_kisskh_sub(episode_id):
         if Config.KISSKH_SUB_KEY:
             try:
                 sub_url = f'{KISSKH_BASE}/api/Sub/{episode_id}?kkey={Config.KISSKH_SUB_KEY}'
-                resp = requests.get(sub_url, headers=_kisskh_headers(), timeout=30, verify=False)
+                sub_headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Referer': f'{KISSKH_BASE}/',
+                    'Origin': 'https://kisskh.nl',
+                }
+                resp = requests.get(sub_url, headers=sub_headers, timeout=30, verify=False)
                 if resp.ok:
                     data = resp.json()
                     _sub_cache[episode_id] = data
