@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Register - KdramaShows{% endblock %}
+{% block content %}
+
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card border-0 bg-dark-subtle p-4">
+                    <div class="card-body">
+                        <h3 class="fw-bold text-center mb-4">Create Account</h3>
+                        {% if error %}
+                        <div class="alert alert-danger py-2">{{ error }}</div>
+                        {% endif %}
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" name="confirm_password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-kdrama w-100 mb-3">Register</button>
+                            <p class="text-center text-muted small mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-kdrama">Login</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

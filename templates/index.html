@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}KdramaShows - Watch Korean Dramas & Movies Online{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section d-flex align-items-center">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold mb-3">Discover Korean Drama & Movies</h1>
+        <p class="lead text-muted mb-4 mx-auto" style="max-width: 600px;">Stream the latest and greatest Korean dramas and films. Unlimited entertainment, instantly.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ url_for('browse', type='movie') }}" class="btn btn-kdrama btn-lg px-4">Browse Movies</a>
+            <a href="{{ url_for('browse', type='tv') }}" class="btn btn-outline-light btn-lg px-4">Browse TV Shows</a>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Movies -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">Latest Movies</h2>
+            <a href="{{ url_for('browse', type='movie') }}" class="btn btn-outline-light btn-sm">View All <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        <div class="row g-3" id="latestMovies">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-kdrama" role="status"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest TV Shows -->
+<section class="py-5 bg-dark-subtle">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">Latest TV Shows</h2>
+            <a href="{{ url_for('browse', type='tv') }}" class="btn btn-outline-light btn-sm">View All <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        <div class="row g-3" id="latestTVShows">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-kdrama" role="status"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-center">
+    <div class="container">
+        <h2 class="fw-bold mb-3">Ready to Start Watching?</h2>
+        <p class="text-muted mb-4">No sign-up required. Just click and stream instantly.</p>
+        <a href="{{ url_for('browse') }}" class="btn btn-kdrama btn-lg px-5">Get Started</a>
+    </div>
+</section>
+{% endblock %}

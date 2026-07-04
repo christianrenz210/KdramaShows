@@ -1,0 +1,683 @@
+:root {
+    --kdrama-primary: #e74c6f;
+    --kdrama-primary-dark: #c0392b;
+    --kdrama-accent: #8e44ad;
+    --navbar-height: 70px;
+
+    --bg-dark: #0f0f1a;
+    --bg-card: #1a1a2e;
+    --bg-elevated: #16213e;
+    --text-muted: #8892b0;
+    --border-color: #233554;
+}
+
+[data-bs-theme="light"] {
+    --bg-dark: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-elevated: #f0f0f5;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+}
+
+[data-bs-theme="light"] .navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-bs-theme="light"] .navbar .nav-link,
+[data-bs-theme="light"] .navbar .navbar-brand {
+    color: #212529 !important;
+}
+
+[data-bs-theme="light"] .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+[data-bs-theme="light"] .footer {
+    background: #1a1a2e !important;
+}
+
+[data-bs-theme="light"] .footer .text-muted,
+[data-bs-theme="light"] .footer h5,
+[data-bs-theme="light"] .footer h6 {
+    color: #8892b0 !important;
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    background: var(--bg-dark);
+    padding-top: var(--navbar-height);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar {
+    background: rgba(15, 15, 26, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    height: var(--navbar-height);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand i {
+    color: var(--kdrama-primary);
+}
+
+.nav-link {
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--kdrama-primary) !important;
+}
+
+.btn-kdrama {
+    background: var(--kdrama-primary);
+    border-color: var(--kdrama-primary);
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-kdrama:hover,
+.btn-kdrama:focus {
+    background: var(--kdrama-primary-dark);
+    border-color: var(--kdrama-primary-dark);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(231, 76, 111, 0.4);
+}
+
+.bg-kdrama {
+    background: var(--kdrama-primary) !important;
+}
+
+.text-kdrama {
+    color: var(--kdrama-primary) !important;
+}
+
+/* Genre Filter */
+.genre-btn {
+    border-radius: 20px !important;
+    padding: 4px 16px !important;
+    margin: 2px 4px;
+    font-size: 0.8rem !important;
+    transition: all 0.2s;
+}
+.genre-btn.active {
+    background: var(--kdrama-primary) !important;
+    border-color: var(--kdrama-primary) !important;
+    color: #fff !important;
+}
+.genre-btn:hover:not(.active) {
+    border-color: var(--kdrama-primary) !important;
+    color: var(--kdrama-primary) !important;
+}
+
+/* Hero */
+.hero-section {
+    min-height: 60vh;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(231, 76, 111, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(142, 68, 173, 0.08) 0%, transparent 50%);
+    animation: heroGlow 10s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-5%, -5%); }
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Cards */
+.card-movie {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+}
+
+.card-movie:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: var(--kdrama-primary);
+}
+
+.card-movie .card-img-top {
+    height: 280px;
+    object-fit: cover;
+    background: var(--bg-elevated);
+}
+
+.card-movie img.card-img-top {
+    transition: transform 0.3s;
+}
+
+.card-movie:hover img.card-img-top {
+    transform: scale(1.05);
+}
+
+.card-movie .card-body {
+    padding: 1rem;
+}
+
+.card-movie .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-movie .badge {
+    font-weight: 500;
+}
+
+.card-movie .placeholder-poster .play-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    transition: transform 0.3s;
+}
+
+.card-movie:hover .placeholder-poster .play-icon i {
+    opacity: 1 !important;
+}
+
+.card-movie:hover .placeholder-poster .play-icon {
+    transform: scale(1.2);
+}
+
+.placeholder-poster {
+    width: 100%;
+    height: 280px;
+    background: var(--bg-elevated);
+}
+
+.placeholder-poster-sm {
+    width: 100%;
+    height: 180px;
+    background: var(--bg-elevated);
+}
+
+/* Step icons */
+.step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--kdrama-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 auto;
+}
+
+/* Accordion */
+.accordion-button:not(.collapsed) {
+    color: var(--kdrama-primary);
+    background: transparent;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--border-color);
+}
+
+.accordion-button::after {
+    transition: transform 0.2s;
+}
+
+/* Footer */
+.footer {
+    background: #0a0a15;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer a:hover {
+    color: var(--kdrama-primary) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* CC selector */
+.cc-selector {
+    position: absolute;
+    bottom: 60px;
+    right: 12px;
+    z-index: 10;
+}
+.cc-toggle-btn {
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    line-height: 1;
+    display: block;
+    width: 100%;
+}
+.cc-toggle-btn:hover { opacity: 1; }
+.cc-toggle-btn.cc-active { color: #e74c6f; }
+.cc-menu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 4px;
+    background: rgba(20,20,35,0.95);
+    border: 1px solid #333;
+    border-radius: 6px;
+    min-width: 140px;
+    overflow: hidden;
+}
+.cc-menu-item {
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #ccc;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.cc-menu-item:hover { background: rgba(231,76,111,0.2); color: #fff; }
+.cc-menu-active { color: #e74c6f; font-weight: 600; }
+.cc-menu-disabled { color: #666; cursor: default; }
+.cc-menu-disabled:hover { background: none; color: #666; }
+
+/* Player Wrapper */
+.player-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.player-container:fullscreen .custom-controls,
+.player-container:-webkit-full-screen .custom-controls,
+.player-container:-moz-full-screen .custom-controls,
+.player-container:-ms-fullscreen .custom-controls {
+    padding: 50px 20px 16px;
+}
+
+.player-container {
+    position: relative;
+    background: #000;
+    line-height: 0;
+}
+
+.player-container video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+.player-container:fullscreen,
+.player-container:-webkit-full-screen,
+.player-container:-moz-full-screen,
+.player-container:-ms-fullscreen {
+    background: #000;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.player-container:fullscreen video,
+.player-container:-webkit-full-screen video,
+.player-container:-moz-full-screen video,
+.player-container:-ms-fullscreen video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.player-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: opacity 0.4s ease;
+}
+
+.player-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.player-loader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(231,76,111,0.2);
+    border-top-color: var(--kdrama-primary);
+    border-radius: 50%;
+    animation: playerSpin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes playerSpin {
+    to { transform: rotate(360deg); }
+}
+
+.player-loader-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.player-loader-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.player-loader-sub {
+    font-size: 0.85rem;
+    color: #8892b0;
+}
+
+.player-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.player-info-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-info-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-episode-badge {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.player-episode-badge i {
+    color: var(--kdrama-primary);
+}
+
+.player-status {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.player-subtitle-status {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ========== CUSTOM CONTROLS ========== */
+.custom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 40px 12px 10px;
+    z-index: 6;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.player-container:hover .custom-controls,
+.custom-controls.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.custom-controls .controls-progress {
+    position: relative;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 4px;
+}
+.custom-controls .controls-progress .controls-buffer {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    pointer-events: none;
+    transition: width 0.2s;
+}
+.custom-controls .controls-seek {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.3);
+    outline: none;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+}
+.custom-controls .controls-seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--kdrama-primary);
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(231,76,111,0.5);
+    transition: transform 0.15s;
+}
+.custom-controls .controls-seek::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+.custom-controls .controls-seek::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--kdrama-primary);
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.custom-controls .controls-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.custom-controls .controls-left,
+.custom-controls .controls-center,
+.custom-controls .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.custom-controls .controls-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.ctrl-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    line-height: 1;
+    opacity: 0.85;
+}
+.ctrl-btn:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.1);
+}
+.ctrl-btn:active {
+    transform: scale(0.92);
+}
+.controls-time {
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    opacity: 0.85;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.controls-quality {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--kdrama-primary);
+    background: rgba(0,0,0,0.5);
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(231,76,111,0.3);
+}
+.volume-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.controls-volume {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.3);
+    outline: none;
+    cursor: pointer;
+    transition: width 0.2s ease;
+    opacity: 0;
+}
+.volume-wrap:hover .controls-volume {
+    width: 70px;
+    opacity: 1;
+}
+.controls-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+.controls-volume::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+}
+/* Show controls when paused or when interacting with player */
+.player-container.paused .custom-controls {
+    opacity: 1;
+    pointer-events: auto;
+}
+.player-container.video-ended .custom-controls {
+    opacity: 1;
+    pointer-events: auto;
+}
+/* Control icons for state */
+.ctrl-btn .bi-play-fill { font-size: 1.5rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 40vh;
+    }
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+    .card-movie .card-img-top {
+        height: 200px;
+    }
+    .custom-controls .controls-center {
+        display: none;
+    }
+    .custom-controls .controls-left .ctrl-btn {
+        font-size: 1.1rem;
+        padding: 4px 5px;
+    }
+    .custom-controls .controls-right .ctrl-btn {
+        font-size: 1.1rem;
+        padding: 4px 5px;
+    }
+    .controls-time {
+        font-size: 0.7rem;
+    }
+}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}How It Works - KdramaShows{% endblock %}
+{% block content %}
+
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">How It Works</h1>
+            <p class="text-muted">Start streaming your favorite Korean content in three simple steps.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-dark-subtle text-center p-4">
+                    <div class="card-body">
+                        <div class="step-icon mb-3">1</div>
+                        <i class="bi bi-search display-4 text-kdrama mb-3 d-block"></i>
+                        <h5 class="fw-bold">Search</h5>
+                        <p class="text-muted small">Browse our extensive library of Korean dramas and movies. Use the search bar or browse by category to find what you want to watch.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-dark-subtle text-center p-4">
+                    <div class="card-body">
+                        <div class="step-icon mb-3">2</div>
+                        <i class="bi bi-hand-index-thumb display-4 text-kdrama mb-3 d-block"></i>
+                        <h5 class="fw-bold">Select</h5>
+                        <p class="text-muted small">Click on any title to view details, check the synopsis, ratings, and available episodes. For TV shows, pick your season and episode.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-dark-subtle text-center p-4">
+                    <div class="card-body">
+                        <div class="step-icon mb-3">3</div>
+                        <i class="bi bi-play-circle display-4 text-kdrama mb-3 d-block"></i>
+                        <h5 class="fw-bold">Watch</h5>
+                        <p class="text-muted small">Hit play and start streaming instantly. No downloads, no sign-ups required. Just click and enjoy high-quality video.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 text-center">
+    <div class="container">
+        <h3 class="fw-bold mb-3">Ready to binge-watch?</h3>
+        <a href="{{ url_for('browse') }}" class="btn btn-kdrama btn-lg px-5">Start Browsing</a>
+    </div>
+</section>
+{% endblock %}

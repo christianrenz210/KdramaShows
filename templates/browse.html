@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Browse - KdramaShows{% endblock %}
+{% block content %}
+
+<section class="py-5 mt-5">
+    <div class="container">
+        <h2 class="fw-bold mb-4">Browse Content</h2>
+
+        <!-- Search -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search titles..." value="{{ query }}">
+                    <button class="btn btn-kdrama" id="searchBtn"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center">
+                <span class="badge bg-danger">KissKh</span>
+                <span class="text-muted small ms-2">Asian content</span>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3" id="browseTabs">
+            <li class="nav-item">
+                <a class="nav-link {% if media_type == 'movie' %}active{% endif %}" href="?type=movie">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if media_type == 'tv' %}active{% endif %}" href="?type=tv">TV Shows</a>
+            </li>
+        </ul>
+
+        <!-- Genre Filter -->
+        <div class="mb-4 overflow-auto" style="white-space:nowrap;">
+            <div class="btn-group flex-wrap" role="group" id="genreFilters">
+                <button class="btn btn-sm btn-outline-light genre-btn active" data-genre="">All</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Action">Action</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Comedy">Comedy</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Crime">Crime</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Romance">Romance</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Thriller">Thriller</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Horror">Horror</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Fantasy">Fantasy</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Mystery">Mystery</button>
+                <button class="btn btn-sm btn-outline-light genre-btn" data-genre="Historical">Historical</button>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="row g-3" id="browseGrid">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-kdrama" role="status"></div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="text-center mt-4" id="loadMoreWrap">
+            <button class="btn btn-outline-light" id="loadMoreBtn" style="display:none;">Load More</button>
+        </div>
+    </div>
+</section>
+{% endblock %}

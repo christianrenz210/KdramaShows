@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}FAQ - KdramaShows{% endblock %}
+{% block content %}
+
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Frequently Asked Questions</h1>
+            <p class="text-muted">Got questions? We've got answers.</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle" data-bs-toggle="collapse" data-bs-target="#faq1">Is KdramaShows free to use?</button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Yes! KdramaShows is completely free. You can browse and stream content without any subscription or payment.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">Do I need to create an account?</button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">No account is required to watch content. Registration is optional and only needed if you want to save favorites or leave comments.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">What kind of content do you offer?</button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">We specialize in Korean dramas and movies, ranging from classic favorites to the latest releases. All content is curated to ensure a great viewing experience.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq4">Why are some shows only in Korean?</button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Most content is available with original Korean audio. Subtitles may be available depending on the source. We're working to improve subtitle support.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq5">How often is new content added?</button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">New movies and episodes are added daily. Check the Latest section on our homepage for the most recent additions.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq6">Can I watch on my mobile device?</button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Absolutely! Our site is fully responsive and works on smartphones, tablets, and desktops.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq7">I found a broken link. What should I do?</button>
+                        </h2>
+                        <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Please contact us through the Contact page and we'll look into it as soon as possible.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-dark-subtle border-0 mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-dark-subtle collapsed" data-bs-toggle="collapse" data-bs-target="#faq8">Is this site legal?</button>
+                        </h2>
+                        <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">KdramaShows aggregates publicly available streaming links. Users should check their local laws regarding streaming content.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
