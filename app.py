@@ -700,37 +700,47 @@ def api_kisskh_stream(episode_id):
             logger.error('Daemon get_stream failed for ep %d: %s', episode_id, e)
 
     if not url:
-        # Fallback: try direct HTTP via KissKHApi (uses env var KISSKH_STREAM_KEY)
+        # Fallback: try direct HTTP using curl_cffi (bypasses Cloudflare)
         if Config.KISSKH_STREAM_KEY:
-            logger.info('Daemon failed, trying KissKHApi fallback for ep %d', episode_id)
+            logger.info('Daemon failed, trying curl_cffi fallback for ep %d', episode_id)
             try:
-                from kisskh_downloader.kisskh_api import KissKHApi
-                api = KissKHApi(base_url=KISSKH_BASE)
+                from curl_cffi import requests as curl_requests
                 slug = re.sub(r'[^a-zA-Z0-9\s-]', '', title).strip()
                 slug = re.sub(r'\s+', '-', slug)
-                keys = api.generate_kkeys(drama_id, episode_id, ep_num, title)
-                stream_key = keys.get('stream') or Config.KISSKH_STREAM_KEY
-                if stream_key:
-                    stream_url = api.get_stream_url(episode_id, stream_key)
-                    if stream_url:
-                        url = stream_url
+                ep_ref = f'{KISSKH_BASE}/Drama/{slug}/Episode-{ep_num}?id={drama_id}&ep={episode_id}'
+                cf_headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Referer': ep_ref,
+                    'Origin': 'https://kisskh.nl',
+                }
+                sess = curl_requests.Session()
+                sess.get(KISSKH_BASE, headers=cf_headers, timeout=15, impersonate='chrome124')
+                stream_api_url = (
+                    f'{KISSKH_BASE}/api/DramaList/Episode/{episode_id}.png'
+                    f'?err=false&ts=null&time=null&kkey={Config.KISSKH_STREAM_KEY}'
+                )
+                resp = sess.get(stream_api_url, headers=cf_headers, timeout=30, impersonate='chrome124')
+                if resp.ok:
+                    data = resp.json()
+                    video_url = data.get('Video')
+                    if video_url:
+                        url = video_url
                         _stream_url_cache[episode_id] = url
-                        logger.info('KissKHApi fallback got stream URL: %s', url[:80])
-                sub_key = keys.get('sub') or Config.KISSKH_SUB_KEY
-                if sub_key and episode_id not in _sub_cache:
-                    try:
-                        sub_data = api.get_subtitles(episode_id, sub_key)
-                        if sub_data:
-                            _sub_cache[episode_id] = [s.model_dump() if hasattr(s, 'model_dump') else s for s in sub_data]
-                    except Exception:
-                        pass
+                        logger.info('Fallback got stream URL: %s', url[:80])
+                        # Also try to fetch subtitles
+                        if Config.KISSKH_SUB_KEY and episode_id not in _sub_cache:
+                            try:
+                                sub_resp = sess.get(
+                                    f'{KISSKH_BASE}/api/Sub/{episode_id}?kkey={Config.KISSKH_SUB_KEY}',
+                                    headers=cf_headers, timeout=15, impersonate='chrome124'
+                                )
+                                if sub_resp.ok:
+                                    _sub_cache[episode_id] = sub_resp.json()
+                            except Exception:
+                                pass
             except Exception as e:
-                logger.error('KissKHApi fallback failed for ep %d: %s', episode_id, e)
-            finally:
-                try:
-                    api.cleanup()
-                except Exception:
-                    pass
+                logger.error('curl_cffi fallback failed for ep %d: %s', episode_id, e)
 
     if not url:
         return jsonify({'error': 'No stream URL returned from server'}), 404

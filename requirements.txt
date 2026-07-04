@@ -5,3 +5,4 @@ python-dotenv
 playwright
 gunicorn
 psycopg2-binary
+curl_cffi
