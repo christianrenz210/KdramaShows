@@ -593,7 +593,8 @@ def proxy_kisskh_video(episode_id, subpath):
 
     logger.info('Proxying m3u8: %s', target)
     try:
-        resp = requests.get(target, headers=info['headers'], timeout=30, verify=False)
+        from curl_cffi import requests as curl_requests
+        resp = curl_requests.get(target, headers=info['headers'], timeout=30, impersonate='chrome124')
         resp.raise_for_status()
         content = resp.text
     except Exception as e:
@@ -635,7 +636,8 @@ def proxy_raw():
         'Origin': 'https://kisskh.nl',
     }
     try:
-        upstream = requests.get(url, headers=headers, timeout=30, verify=False, stream=True)
+        from curl_cffi import requests as curl_requests
+        upstream = curl_requests.get(url, headers=headers, timeout=30, impersonate='chrome124', stream=True)
         upstream.raise_for_status()
         ct = upstream.headers.get('Content-Type', 'application/octet-stream')
         def generate():
@@ -648,7 +650,7 @@ def proxy_raw():
         fr.headers['Access-Control-Allow-Headers'] = '*'
         return fr
     except Exception as e:
-        logger.error('Proxy failed %s: %s', url[:60], e)
+        logger.error('Proxy raw failed %s: %s', url[:60], e)
         return Response('', status=502)
 
 def _safe_int(val):
