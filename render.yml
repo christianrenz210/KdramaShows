@@ -2,7 +2,7 @@ services:
   - type: web
     name: kdramashows
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && playwright install chromium && playwright install-deps chromium
     startCommand: gunicorn app:app
     envVars:
       - key: DATABASE_URL
@@ -13,6 +13,11 @@ services:
         generateValue: true
       - key: FLASK_ENV
         value: production
+      # Set these in Render dashboard with values from local .env (run: python save_kkey.py <drama_id> <episode_id>)
+      # - key: KISSKH_STREAM_KEY
+      #   value: <your_stream_key>
+      # - key: KISSKH_SUB_KEY
+      #   value: <your_sub_key>
 databases:
   - name: kdramashowsdb
     plan: free

@@ -696,10 +696,28 @@ def api_kisskh_stream(episode_id):
                     max_ep = max(e['number'] for e in drama_data['episodes'])
                     if ep_num > max_ep:
                         return jsonify({'error': 'not_released', 'ep_num': ep_num, 'max_ep': max_ep}), 404
-                return jsonify({'error': error}), 500
         except Exception as e:
             logger.error('Daemon get_stream failed for ep %d: %s', episode_id, e)
-            return jsonify({'error': f'Stream extraction failed: {e}'}), 500
+
+    if not url:
+        # Fallback: try direct HTTP request using saved KISSKH_STREAM_KEY
+        if Config.KISSKH_STREAM_KEY:
+            logger.info('Daemon failed, trying fallback with KISSKH_STREAM_KEY for ep %d', episode_id)
+            try:
+                stream_api_url = (
+                    f'{KISSKH_BASE}/api/DramaList/Episode/{episode_id}.png'
+                    f'?err=false&ts=null&time=null&kkey={Config.KISSKH_STREAM_KEY}'
+                )
+                resp = requests.get(stream_api_url, headers=_kisskh_headers(), timeout=30, verify=False)
+                if resp.ok:
+                    data = resp.json()
+                    fallback_url = data.get('Video')
+                    if fallback_url:
+                        url = fallback_url
+                        _stream_url_cache[episode_id] = url
+                        logger.info('Fallback got stream URL: %s', url[:80])
+            except Exception as e:
+                logger.error('Fallback stream fetch failed for ep %d: %s', episode_id, e)
 
     if not url:
         return jsonify({'error': 'No stream URL returned from server'}), 404
@@ -752,6 +770,17 @@ def _convert_to_webvtt(sub_data):
 def api_kisskh_sub(episode_id):
     language = request.args.get('language', 'en')
     data = _get_cached_sub_data(episode_id)
+    if data is None:
+        # Fallback: try direct HTTP request using KISSKH_SUB_KEY
+        if Config.KISSKH_SUB_KEY:
+            try:
+                sub_url = f'{KISSKH_BASE}/api/Sub/{episode_id}?kkey={Config.KISSKH_SUB_KEY}'
+                resp = requests.get(sub_url, headers=_kisskh_headers(), timeout=30, verify=False)
+                if resp.ok:
+                    data = resp.json()
+                    _sub_cache[episode_id] = data
+            except Exception as e:
+                logger.error('Fallback sub fetch failed for ep %d: %s', episode_id, e)
     if data is None:
         return jsonify({'subtitles': False, 'error': 'No subtitles available'}), 404
     webvtt = _convert_to_webvtt(data)
