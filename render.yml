@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: kdramashows
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kdramashowsdb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+databases:
+  - name: kdramashowsdb
+    plan: free
