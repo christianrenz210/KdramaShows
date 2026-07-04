@@ -704,27 +704,21 @@ def api_kisskh_stream(episode_id):
         if Config.KISSKH_STREAM_KEY:
             logger.info('Daemon failed, trying fallback with KISSKH_STREAM_KEY for ep %d', episode_id)
             try:
-                slug = re.sub(r'[^a-zA-Z0-9\s-]', '', title).strip()
-                slug = re.sub(r'\s+', '-', slug)
-                ep_ref = f'{KISSKH_BASE}/Drama/{slug}/Episode-{ep_num}?id={drama_id}&ep={episode_id}'
-                fallback_headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': 'application/json, text/plain, */*',
-                    'Referer': ep_ref,
-                    'Origin': 'https://kisskh.nl',
-                }
                 stream_api_url = (
                     f'{KISSKH_BASE}/api/DramaList/Episode/{episode_id}.png'
                     f'?err=false&ts=null&time=null&kkey={Config.KISSKH_STREAM_KEY}'
                 )
-                resp = requests.get(stream_api_url, headers=fallback_headers, timeout=30, verify=False)
-                if resp.ok:
-                    data = resp.json()
-                    fallback_url = data.get('Video')
-                    if fallback_url:
-                        url = fallback_url
-                        _stream_url_cache[episode_id] = url
-                        logger.info('Fallback got stream URL: %s', url[:80])
+                fallback_headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': '*/*',
+                    'Referer': f'{KISSKH_BASE}/',
+                    'Origin': 'https://kisskh.nl',
+                }
+                check = requests.get(stream_api_url, headers=fallback_headers, timeout=30, verify=False)
+                if check.ok and len(check.text) > 100:
+                    url = stream_api_url
+                    _stream_url_cache[episode_id] = url
+                    logger.info('Fallback using kkey stream URL: %s', url[:80])
             except Exception as e:
                 logger.error('Fallback stream fetch failed for ep %d: %s', episode_id, e)
 
