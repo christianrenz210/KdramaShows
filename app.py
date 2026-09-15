@@ -28,7 +28,7 @@ _daemon_proc = None
 _daemon_lock = Lock()
 _daemon_ready = Event()
 
-def _start_daemon():
+def _start_daemon(ready_timeout=60):
     global _daemon_proc
     script = os.path.join(os.path.dirname(__file__), 'playwright_daemon.py')
     try:
@@ -41,15 +41,30 @@ def _start_daemon():
             text=True,
             bufsize=1
         )
-        # Wait for "ready" signal
-        line = _daemon_proc.stdout.readline().strip()
+        # Wait for "ready" signal, bounded so a stuck Chromium launch
+        # (e.g. missing system deps) can't hang the caller (gunicorn's
+        # post_fork boot) forever and crash-loop the whole app.
+        ready_line = [None]
+        def _read_ready():
+            try:
+                ready_line[0] = _daemon_proc.stdout.readline().strip()
+            except Exception:
+                pass
+        t = Thread(target=_read_ready, daemon=True)
+        t.start()
+        t.join(timeout=ready_timeout)
+        line = ready_line[0]
         if line:
             msg = json.loads(line)
             if msg.get('type') == 'ready':
                 logger.info('Playwright daemon ready')
                 _daemon_ready.set()
                 return
-        logger.error('Daemon failed to send ready signal')
+        logger.error('Daemon failed to send ready signal within %ss', ready_timeout)
+        try:
+            _daemon_proc.kill()
+        except Exception:
+            pass
     except Exception as e:
         logger.error('Failed to start daemon: %s', e)
     _daemon_proc = None
